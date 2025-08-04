@@ -1,0 +1,167 @@
+REMAINING:
+  //in order.models.js
+      paymentId	String	Store Razorpay/Stripe ID
+      bookingNote	String	Notes or special requests,  
+
+
+
+
+// Functional Requirements (What the app does)
+            1. User Management
+            Users can register and login (email/password or social login).
+
+            Admins can log in to manage events and validate entries.
+
+            2. Event Browsing
+            Users can view a list of upcoming events.
+
+            Event details include: name, date/time, venue, description, price.
+
+            3. Ticket Booking
+            Users can select an event and buy tickets.
+
+            Each booking generates a unique ticket ID and QR code.
+
+            Payments can be integrated (Stripe, Razorpay, etc.).
+
+            4. QR Code Generation & Validation
+            After booking, a QR code is generated for each ticket.
+
+            At entry, organizers scan the QR code to verify ticket validity.
+
+            5. Admin Panel (Optional/Advanced)
+            Admins can add/edit/delete events.
+
+            Admins can scan QR codes at event entry and mark tickets as used.
+
+
+Non-Functional Requirements
+            1. Platform Compatibility
+            Android and iOS support using Flutter.
+
+            2. Backend
+            Firebase Firestore for database.
+
+            Firebase Auth for authentication.
+
+            (Optional) Firebase Functions for server logic (like QR validation).
+
+            3. Security
+            Secure QR code generation (not easily guessable).
+
+            Access control (admin vs user).
+
+            Tickets can only be used once.
+
+            4. Performance
+            Fast loading of event lists and real-time updates.
+
+            Offline handling (basic caching or local storage).
+
+// Essential Models (Core Functionality)
+         ✅1. User
+            Handles user registration/login
+
+            Fields: userName, email, contact, password, role (user, admin, manager), etc.
+
+          ✅2. Event
+            Stores all event details
+
+            Fields: title, description, venue, eventDate, endDate, categories, createdBy, tickets, etc.
+
+          ✅3. Ticket
+            Ticket pricing and availability info (linked to an event)
+
+            Fields: ticketPrice, ticketsType, totalTickets, ticketsSold, isFree, bookingStart, bookingDeadline, status
+
+          ✅4. Booking (or Order)
+            Stores a user’s ticket purchase (like a receipt)
+
+            Fields: userId, eventId, ticketId, quantity, qrData, isScanned, bookingTime
+
+            ✅5. QRScanLog (optional but useful for tracking)
+            Logs all QR scans at event entry
+
+            Fields: ticketId, scannedBy, scanTime, isValid
+
+// Optional / Advanced Models
+            6. Payment
+            To store Razorpay/Stripe transaction info
+
+            Fields: userId, bookingId, amount, paymentStatus, paymentId, gateway
+
+            7. Review or Feedback
+            Allow users to leave feedback on events
+
+            Fields: userId, eventId, rating, comment, timestamp
+
+            8. Notification (or Announcement)
+            For sending event updates to users
+
+            Fields: title, message, eventId, targetRole, createdAt
+
+            9. Seat / Zone (for advanced apps with seating)
+            If you have specific seat assignments
+
+            Fields: zoneName, seatCount, price, eventId, bookedSeats
+
+
+// Controllers
+
+
+              ✅ 1. UserController
+              Handles:
+
+              ✅Registration & login
+
+              ✅ Admin vs Event Manager role checks
+
+              ✅ Fetch/update user profile
+
+              ✅(Optional) Password change/reset logic
+
+               ✅2. EventController
+              Handles:
+
+              ✅Creating new events (event manager only)
+
+              ✅Updating/canceling events
+
+              ✅Fetching events (for listing)
+
+              ❌Filtering by category, date, location
+
+              ✅Fetching single event details
+
+               3. TicketController
+              Handles:
+
+              ✅Ticket creation for an event
+
+              ✅ Updating ticket availability (e.g., after booking)
+
+              ✅Get ticket pricing/type info
+
+              ✅ (Optional) Showing booking deadline countdown
+
+               4. OrderController
+              Handles:
+
+              ✅Ticket booking (create order)
+
+              ✅Show user bookings
+
+              ✅Calculate totalPrice, decrement ticketsAvail, increment ticketsSold
+
+              ✅Cancel/refund order (optional)
+
+               5. QRScanController (or ScanController)
+              Handles:
+
+              Validating QR code at event gate
+
+              Check if ticket is already scanned (isScanned)
+
+              Mark ticket as scanned
+
+              Add entry to ScanLog
