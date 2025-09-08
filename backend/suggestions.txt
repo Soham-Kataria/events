@@ -155,7 +155,7 @@ Non-Functional Requirements
 
               ✅Cancel/refund order (optional)
 
-               5. QRScanController (or ScanController)
+              ✅ 5. QRScanController (or ScanController)
               Handles:
 
               Validating QR code at event gate

@@ -132,7 +132,6 @@ exports.updateOrder = async (req,res,next) => {
         if (changes.quantity <= 0) {
             return res.status(400).json({ message: "Quantity must be greater than 0" });
         }
-        console.log(changes.status)
 
         ticket.ticketsAvail += order.quantity;
         ticket.ticketsSold -= order.quantity;

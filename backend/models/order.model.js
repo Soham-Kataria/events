@@ -29,7 +29,7 @@ const orderSchema = mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ['Confirmed', 'Cancelled', 'Refunded',"Pending"],
+        enum: ['Confirmed', 'Cancelled', 'Refunded',"Pending","Paid"],
         default: 'Pending'
     },
     totalPrice:{

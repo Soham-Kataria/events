@@ -3,7 +3,7 @@ const User = require('../models/user.model.js')
 const Order = require('../models/order.model.js')
 const Payment = require('../models/payment.model.js')
 
-module.exports.pay = async (req,res,next) => {
+exports.pay = async (req,res,next) => {
     try {
         const userId = req.user._id
         const orderId = req.params.orderId
@@ -18,19 +18,27 @@ module.exports.pay = async (req,res,next) => {
             return res.status(400).json({message:"Order Not found"})
         }
 
-        const existingPayment = await Payment.find({orderId:orderId})
+        const existingPayment = await Payment.findOne({orderId})
 
         if(existingPayment){
             return res.status(400).json({message:"Payment already made"})
         }
         
         const payment = await Payment.create({userId,orderId,amount:order.totalPrice,paymentStatus:"success"});
-
-        order.status = "Confirmed"
+        order.status="Paid";
         await order.save()
         console.log(order)
         res.json(payment);
 
+    } catch (error) {
+        next(error)
+    }
+}
+
+exports.getPayment= async (req,res,next)=>{
+    try {
+        const user = await User.findById(req.user.id)
+        console.log(user)
     } catch (error) {
         next(error)
     }
