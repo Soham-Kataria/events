@@ -85,7 +85,7 @@ Non-Functional Requirements
             Fields: ticketId, scannedBy, scanTime, isValid
 
 // Optional / Advanced Models
-            6. Payment
+            ✅6. Payment
             To store Razorpay/Stripe transaction info
 
             Fields: userId, bookingId, amount, paymentStatus, paymentId, gateway
