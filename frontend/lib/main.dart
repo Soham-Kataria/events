@@ -1,6 +1,7 @@
 import 'package:event_tracker/screens/auth/controller.dart';
+import 'package:event_tracker/screens/booking/backup_controller.dart';
+import 'package:event_tracker/screens/events/controller.dart';
 import 'package:event_tracker/screens/home/controller.dart';
-// import 'package:event_tracker/screens/auth/register.dart';
 import 'package:event_tracker/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -12,6 +13,8 @@ void main() {
           providers: [
             ChangeNotifierProvider(create: (context) => AuthController()),
             ChangeNotifierProvider(create: (context) => HomeController()),
+            ChangeNotifierProvider(create: (context) => EventController()),
+            ChangeNotifierProvider(create: (context) => BookingController(ticketTypes: [])),
           ],
           child: const MyApp())
   );

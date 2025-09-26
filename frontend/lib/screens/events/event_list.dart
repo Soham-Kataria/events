@@ -1,88 +1,57 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import '../../widgets/event_card.dart';
+import '../../dummy/dummy_data.dart';
 
-class EventListScreen extends StatefulWidget {
-  const EventListScreen({super.key});
+class EventListScreen extends StatelessWidget {
+  final String filterType; // "Upcoming Events", "Popular Events", "Recommended for you"
+  final bool showBottomNav;
 
-  @override
-  State<EventListScreen> createState() => _EventListScreenState();
-}
-
-class _EventListScreenState extends State<EventListScreen> {
-  final TextEditingController _searchController = TextEditingController();
+  const EventListScreen({
+    super.key,
+    this.filterType = "All",
+    this.showBottomNav = true,
+  });
 
   @override
   Widget build(BuildContext context) {
+    // Filter events based on type
+    List<Map<String, dynamic>> filteredEvents = allEvents.where((e) {
+      if (filterType == "Upcoming Events") return e["type"] == "upcoming";
+      if (filterType == "Popular Events") return e["type"] == "popular";
+      if (filterType == "Recommended for you") return e["type"] == "recommendation";
+      return true; // "All" shows all events
+    }).toList();
+
     var theme = Theme.of(context);
-    var _ = theme.textTheme;
     var colorScheme = theme.colorScheme;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Events'),
+        title: Text(filterType),
         backgroundColor: colorScheme.surface,
         foregroundColor: colorScheme.onSurface,
         elevation: 0,
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              TextField(
-                controller: _searchController,
-                decoration: InputDecoration(
-                  hintText: 'Search events...',
-                  // Prefix icon for filter
-                  prefixIcon: IconButton(
-                    icon: Icon(Icons.filter_list),
-                    onPressed: () {
-                      // Handle filter icon press
-                      if (kDebugMode) {
-                        print('Filter button pressed');
-                      }
-                      // You can show a dialog, navigate to a filter screen, etc.
-                    },
-                  ),
-                  // Suffix icon for search
-                  suffixIcon: IconButton(
-                    icon: Icon(Icons.search),
-                    onPressed: () {
-                      // Handle search icon press
-                      if (kDebugMode) {
-                        print('Search button pressed: ${_searchController.text}');
-                      }
-                      // Perform search based on _searchController.text
-                    },
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                    borderSide: BorderSide.none, // Or customize border
-                  ),
-                  filled: true,
-                  fillColor: colorScheme.surfaceContainerHighest, // Or your desired background color
-                ),
-                onSubmitted: (value) {
-                  // Handle search when user presses enter/done on keyboard
-                  if (kDebugMode) {
-                    print('Search submitted: $value');
-                  }
-                  // Perform search based on value
-                },
-              ),
-              // Add other widgets for your event list below
-              SizedBox(height: 20),
-              Text('Your event list content goes here...'),
-            ],
-          ),
-        ),
+      body: ListView.separated(
+        padding: const EdgeInsets.all(16),
+        itemCount: filteredEvents.length,
+        separatorBuilder: (_, __) => const SizedBox(height: 12),
+        itemBuilder: (context, index) {
+          var event = filteredEvents[index];
+          return EventCard(
+            title: event["title"] ?? "No Title",
+            location: event["location"] ?? "Unknown",
+            imageUrl: event["poster"] ?? "",
+            buttonLabel: "Book Now",
+            onButtonPressed: () {
+              if (kDebugMode) {
+                print("${event["title"]} button pressed");
+              }
+            },
+          );
+        },
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _searchController.dispose();
-    super.dispose();
   }
 }

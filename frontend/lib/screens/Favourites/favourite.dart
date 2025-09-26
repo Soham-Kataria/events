@@ -1,33 +1,61 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../widgets/big_event_card.dart';
+import '../events/controller.dart';
 
-class FavouriteScreen extends StatefulWidget {
+class FavouriteScreen extends StatelessWidget {
   const FavouriteScreen({super.key});
 
   @override
-  State<FavouriteScreen> createState() => _FavouriteScreenState();
-}
-
-class _FavouriteScreenState extends State<FavouriteScreen> {
-  @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
-    var textTheme = theme.textTheme;
     var colorScheme = theme.colorScheme;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Favourite'),
+        title: const Text("Favourites"),
         backgroundColor: colorScheme.surface,
         foregroundColor: colorScheme.onSurface,
         elevation: 0,
       ),
-      body: Center(
-        child: Text(
-          'Welcome to the Favourite screen!',
-          style: textTheme.bodyLarge,
-        ),
+      body: Consumer<EventController>(
+        builder: (context, eventController, _) {
+          // Get all events that are favourited
+          var favouriteEvents = eventController.getFavouriteEvents()
+              .fold<Map<String, Map<String, dynamic>>>({}, (map, event) {
+            map[event["title"]] = event; // overwrite duplicates
+            return map;
+          })
+              .values
+              .toList();
+
+
+          if (favouriteEvents.isEmpty) {
+            return const Center(
+              child: Text("No favourites yet"),
+            );
+          }
+
+          return ListView.separated(
+            padding: const EdgeInsets.all(16),
+            itemCount: favouriteEvents.length,
+            separatorBuilder: (_, __) => const SizedBox(height: 12),
+            itemBuilder: (context, index) {
+              var event = favouriteEvents[index];
+               // bool isFavourite = eventController.favourites[event["title"]!] ?? false;
+              return BigEventCard(
+                title: event["title"]!,
+                genre: event["genre"]!,
+                imageUrl: event["poster"]!,
+                dateTime: event["dateTime"]!,
+                price: event["price"]?.toString() ?? "0",
+                // This toggle automatically updates the list
+                //  onFavouriteToggle: () => eventController.toggleFavourite(event["title"]!),
+              );
+            },
+          );
+        },
       ),
     );
-
   }
 }
