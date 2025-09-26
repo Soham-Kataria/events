@@ -1,0 +1,32 @@
+//users
+    register 
+    login 
+    getusers(all) 
+    usersprofile(By id) 
+    update user 
+    delete user
+
+//event
+    createEvent
+    updateEvent
+    getEvents
+    searchEvent
+    searchEvent
+
+//order
+    setOrder
+    getOrders
+    getOrder(Id)
+    update
+    cancel
+
+//ticket
+    update 
+    getTickerts
+    deadline countdown
+
+//payment
+    pay
+    getPayment
+    getPayment(Id)
+    refundRequest
