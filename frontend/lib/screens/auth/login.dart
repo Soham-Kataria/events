@@ -121,7 +121,9 @@ class _LoginState extends State<Login> {
                     height: 24,
                     width: 24,
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                  //todo: add google login
+                  },
                 ),
               ),
 
@@ -138,7 +140,9 @@ class _LoginState extends State<Login> {
                     height: 24,
                     width: 24,
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    // todo: add apple login
+                  }
                 ),
               ),
 

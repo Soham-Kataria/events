@@ -44,8 +44,8 @@ Widget outlinedButton({
       style: TextStyle(fontSize: fontSize),
     ),
     style: OutlinedButton.styleFrom(
-      backgroundColor: Colors.white, // ✅ stays white in both themes
-      foregroundColor: Colors.black, // ✅ text/icon contrast
+      backgroundColor: Colors.white,
+      foregroundColor: Colors.black,
       minimumSize: minimumSize ?? Size(fontSize * 10, fontSize * 3),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(borderRadius),

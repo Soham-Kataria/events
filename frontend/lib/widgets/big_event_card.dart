@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:event_tracker/theme/colors.dart';
-
 import '../components/ui_utils.dart';
+import '../screens/events/controller.dart';
+import '../screens/events/events_detail.dart';
 
-class BigEventCard extends StatefulWidget {
+class BigEventCard extends StatelessWidget {
   final String title;
   final String genre;
   final String imageUrl;
   final String dateTime;
   final String price;
-  final VoidCallback? onFavouriteToggle;
+  final String? location;
+  final String? about;
+  final List<String>? galleryImages;
 
   const BigEventCard({
     super.key,
@@ -18,101 +22,95 @@ class BigEventCard extends StatefulWidget {
     required this.imageUrl,
     required this.dateTime,
     required this.price,
-    this.onFavouriteToggle,
+    this.location,
+    this.about,
+    this.galleryImages,
   });
 
   @override
-  State<BigEventCard> createState() => _BigEventCardState();
-}
-
-class _BigEventCardState extends State<BigEventCard> {
-  bool isFavourite = false;
-
-  @override
   Widget build(BuildContext context) {
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    var isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
       color: isDarkMode ? kDarkColor : kWhiteColor,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
-        side: BorderSide(color: kGrayColor.withValues(alpha:0.3)),
+        side: BorderSide(color: kGrayColor.withValues(alpha: 0.3)),
       ),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: () {
-          // TODO: navigate to details page
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => EventDetail(
+                eventTitle: title,
+              ),
+            ),
+          );
         },
         borderRadius: BorderRadius.circular(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Image with overlays
             Stack(
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(8.0), // even spacing around image
+                  padding: const EdgeInsets.all(8.0),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(12),
                     child: Image.network(
-                      widget.imageUrl,
+                      imageUrl,
                       width: double.infinity,
                       height: 190,
                       fit: BoxFit.cover,
                     ),
                   ),
                 ),
-                // Genre chip
                 Positioned(
                   top: 16,
                   left: 16,
                   child: Chip(
                     label: Text(
-                      widget.genre,
+                      genre,
                       style: const TextStyle(
                         fontWeight: FontWeight.w500,
                         color: kDarkColor,
                       ),
                     ),
-                    backgroundColor: kWhiteColor.withValues(alpha:0.8),
+                    backgroundColor: kWhiteColor.withValues(alpha: 0.8),
                   ),
                 ),
-                // Favourite button
                 Positioned(
                   top: 16,
                   right: 16,
-                  child: InkWell(
-                    onTap: () {
-                      setState(() {
-                        isFavourite = !isFavourite;
-                      });
-                      if (widget.onFavouriteToggle != null) {
-                        widget.onFavouriteToggle!();
-                      }
+                  child: Consumer<EventController>(
+                    builder: (_, eventController, __) {
+                      bool isFavourite = eventController.favourites[title] ?? false;
+                      return InkWell(
+                        onTap: () => eventController.toggleFavourite(title),
+                        child: CircleAvatar(
+                          backgroundColor: Colors.black45,
+                          child: Icon(
+                            isFavourite ? Icons.favorite : Icons.favorite_border,
+                            color: kWhiteColor,
+                          ),
+                        ),
+                      );
                     },
-                    child: CircleAvatar(
-                      backgroundColor: Colors.black45,
-                      child: Icon(
-                        isFavourite ? Icons.favorite : Icons.favorite_border,
-                        color: kWhiteColor,
-                      ),
-                    ),
                   ),
                 ),
               ],
             ),
-
-            // Event details
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 1),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Title
                   Text(
-                    widget.title,
+                    title,
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -120,27 +118,38 @@ class _BigEventCardState extends State<BigEventCard> {
                     ),
                   ),
                   vSpace(6),
-                  // Date & Time
                   Text(
-                    widget.dateTime,
+                    dateTime,
                     style: TextStyle(
                       fontSize: 14,
                       color: isDarkMode ? kLightColor : kGrayColor,
                     ),
                   ),
-                  vSpace(12),
-                  // Price at bottom-right
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Text(
-                        widget.price,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: kSecondaryColor,
+                      Container(
+                        margin: const EdgeInsets.only(right: 2,bottom: 16),
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                            color: isDarkMode
+                                ? kWhiteColor.withValues(alpha: 0.8)
+                                : kDarkColor.withValues(alpha: 0.6),
+                            width: 1.2,
+                          ),
+                          color: isDarkMode ? kDarkColor : kWhiteColor,
                         ),
-                      ),
+                        child: Text(
+                          "₹$price",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: isDarkMode ? kSecondaryColor : kPrimaryColor,
+                          ),
+                        ),
+                      )
                     ],
                   ),
                 ],

@@ -63,6 +63,7 @@ TextInputType keyboardType = TextInputType.text,
       ),
       filled: true,
       fillColor: Colors.white,
+
     ),
   );
 }
