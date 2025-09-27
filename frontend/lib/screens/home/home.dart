@@ -8,7 +8,7 @@ import '../../theme/colors.dart';
 import '../events/controller.dart';
 import '../events/event_list.dart';
 import 'controller.dart';
-
+import '../../models/event_model.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -80,8 +80,8 @@ class _HomeScreenState extends State<HomeScreen> {
               child: customTextField(
                 controller: home.txtHomeSearch,
                 hintText: 'Search events...',
-                prefixIcon: Icon(Icons.search, color: theme.iconTheme.color),
-                suffixIcon: Icon(Icons.filter_alt_outlined, color: theme.iconTheme.color, size: 24),
+                prefixIcon: Icon(Icons.search, color: kDarkColor),
+                suffixIcon: Icon(Icons.filter_alt_outlined, color: kDarkColor, size: 24),
               ),
             ),
             vSpace(16),
@@ -97,8 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   return GestureDetector(
                     onTap: () => home.selectFilter(index),
                     child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 8),
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                       margin: const EdgeInsets.only(right: 8),
                       decoration: BoxDecoration(
                         color: isSelected ? kPrimaryColor : isDark ? kDarkColor : kWhiteColor,
@@ -111,7 +110,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Text(
                           home.quickFilters[index],
                           style: TextStyle(
-                            color: isSelected ? kWhiteColor : isDark ? kWhiteColor : kDarkColor, fontWeight: FontWeight.w500,
+                            color: isSelected ? kWhiteColor : isDark ? kWhiteColor : kDarkColor,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                       ),
@@ -122,8 +122,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             vSpace(16),
             // Upcoming Events
-            _buildSectionHeader(
-                "Upcoming Events", home.upcomingEvents),
+            _buildSectionHeader("Upcoming Events"),
             SizedBox(
               height: 130,
               child: ListView.separated(
@@ -132,29 +131,25 @@ class _HomeScreenState extends State<HomeScreen> {
                 itemCount: home.upcomingEvents.length,
                 separatorBuilder: (_, __) => hSpace(8),
                 itemBuilder: (context, index) {
-                  var event = home.upcomingEvents[index];
+                  EventModel event = home.upcomingEvents[index];
                   return ConstrainedBox(
                     constraints: BoxConstraints(
                       minWidth: 250,
                       maxWidth: MediaQuery.of(context).size.width * 0.9,
                     ),
                     child: EventCard(
-                      title: event["title"]!,
-                      location: event["location"]!,
-                      imageUrl: event["poster"]!,
+                      event: event,
                       buttonLabel: "Notify",
-                      onButtonPressed: () {
-                        // Todo: Make Notification feature
-                      },
+                      onButtonPressed: () {},
+                      showDateTime: false,
                     ),
                   );
                 },
               ),
             ),
             vSpace(16),
-
             // Popular Events
-            _buildSectionHeader("Popular Events", home.popularEvents),
+            _buildSectionHeader("Popular Events"),
             SizedBox(
               height: 331,
               child: ListView.separated(
@@ -163,7 +158,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 itemCount: home.popularEvents.length,
                 separatorBuilder: (_, __) => hSpace(8),
                 itemBuilder: (context, index) {
-                  var event = home.popularEvents[index];
+                  EventModel event = home.popularEvents[index];
                   return ConstrainedBox(
                     constraints: BoxConstraints(
                       minWidth: 250,
@@ -171,16 +166,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     child: Consumer<EventController>(
                       builder: (context, eventController, _) {
-                        // bool isFavourite = eventController.favourites[event["title"]!] ?? false;
-                        return BigEventCard(
-                          title: event["title"]!,
-                          genre: event["genre"]!,
-                          imageUrl: event["poster"]!,
-                          dateTime: event["dateTime"]!,
-                          price: event["price"]?.toString() ?? "0",
-                          // isFavourite: isFavourite,
-                          // onFavouriteToggle: () => eventController.toggleFavourite(event["title"]!),
-                        );
+                        return BigEventCard(event: event);
                       },
                     ),
                   );
@@ -188,25 +174,19 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             vSpace(16),
-
             // Recommended Events
-            _buildSectionHeader(
-                "Recommended for you", home.recommendedEvents),
+            _buildSectionHeader("Recommended for you"),
             ListView.separated(
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               itemCount: home.recommendedEvents.length,
               separatorBuilder: (_, __) => const SizedBox(height: 8),
               itemBuilder: (context, index) {
-                var event = home.recommendedEvents[index];
+                EventModel event = home.recommendedEvents[index];
                 return EventCard(
-                  title: event["title"]!,
-                  location: event["location"]!,
-                  imageUrl: event["poster"]!,
+                  event: event,
                   buttonLabel: "Book Now",
-                  onButtonPressed: () {
-                    // Navigate to detail if needed
-                  },
+                  onButtonPressed: () {},
                 );
               },
             ),
@@ -216,27 +196,19 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildSectionHeader(
-      String title, List<Map<String, dynamic>> events) {
+  Widget _buildSectionHeader(String title) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
           title,
-          style: Theme.of(context)
-              .textTheme
-              .titleMedium
-              ?.copyWith(fontWeight: FontWeight.bold, fontSize: 18),
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, fontSize: 18),
         ),
         TextButton(
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                builder: (_) => EventListScreen(
-                  filterType: title,
-                ),
-              ),
+              MaterialPageRoute(builder: (_) => EventListScreen(filterType: title)),
             );
           },
           child: const Text("See All"),

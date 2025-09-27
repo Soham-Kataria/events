@@ -1,31 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:event_tracker/theme/colors.dart';
-import '../components/ui_utils.dart';
+import '../navigation/app_routes.dart';
 import '../screens/events/controller.dart';
 import '../screens/events/events_detail.dart';
+import '../models/event_model.dart';
+import '../theme/colors.dart';
+import '../components/ui_utils.dart';
 
 class BigEventCard extends StatelessWidget {
-  final String title;
-  final String genre;
-  final String imageUrl;
-  final String dateTime;
-  final String price;
-  final String? location;
-  final String? about;
-  final List<String>? galleryImages;
+  final EventModel event;
 
-  const BigEventCard({
-    super.key,
-    required this.title,
-    required this.genre,
-    required this.imageUrl,
-    required this.dateTime,
-    required this.price,
-    this.location,
-    this.about,
-    this.galleryImages,
-  });
+  const BigEventCard({super.key, required this.event});
 
   @override
   Widget build(BuildContext context) {
@@ -41,13 +26,12 @@ class BigEventCard extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: () {
-          Navigator.push(
+          Navigator.pushNamed(
             context,
-            MaterialPageRoute(
-              builder: (_) => EventDetail(
-                eventTitle: title,
-              ),
-            ),
+            Routes.eventDetail,
+            arguments: {
+              'event': event,
+            },
           );
         },
         borderRadius: BorderRadius.circular(16),
@@ -62,7 +46,7 @@ class BigEventCard extends StatelessWidget {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(12),
                     child: Image.network(
-                      imageUrl,
+                      event.poster,
                       width: double.infinity,
                       height: 190,
                       fit: BoxFit.cover,
@@ -74,7 +58,7 @@ class BigEventCard extends StatelessWidget {
                   left: 16,
                   child: Chip(
                     label: Text(
-                      genre,
+                      event.genre,
                       style: const TextStyle(
                         fontWeight: FontWeight.w500,
                         color: kDarkColor,
@@ -88,9 +72,9 @@ class BigEventCard extends StatelessWidget {
                   right: 16,
                   child: Consumer<EventController>(
                     builder: (_, eventController, __) {
-                      bool isFavourite = eventController.favourites[title] ?? false;
+                      bool isFavourite = eventController.favourites[event.title] ?? false;
                       return InkWell(
-                        onTap: () => eventController.toggleFavourite(title),
+                        onTap: () => eventController.toggleFavourite(event.title),
                         child: CircleAvatar(
                           backgroundColor: Colors.black45,
                           child: Icon(
@@ -110,7 +94,7 @@ class BigEventCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    title,
+                    event.title,
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -119,7 +103,7 @@ class BigEventCard extends StatelessWidget {
                   ),
                   vSpace(6),
                   Text(
-                    dateTime,
+                    event.dateTime,
                     style: TextStyle(
                       fontSize: 14,
                       color: isDarkMode ? kLightColor : kGrayColor,
@@ -129,7 +113,7 @@ class BigEventCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Container(
-                        margin: const EdgeInsets.only(right: 2,bottom: 16),
+                        margin: const EdgeInsets.only(right: 2, bottom: 16),
                         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
@@ -142,7 +126,7 @@ class BigEventCard extends StatelessWidget {
                           color: isDarkMode ? kDarkColor : kWhiteColor,
                         ),
                         child: Text(
-                          "₹$price",
+                          "₹${event.price.toStringAsFixed(0)}",
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,

@@ -1,46 +1,29 @@
 import 'package:event_tracker/theme/colors.dart';
 import 'package:flutter/material.dart';
 import '../components/ui_utils.dart';
-import '../screens/events/events_detail.dart';
+import '../navigation/app_routes.dart';
+import '../models/event_model.dart';
 
 class EventCard extends StatelessWidget {
-  final String title;
-  final String location;
-  final String imageUrl;
+  final EventModel event;
   final String buttonLabel;
   final VoidCallback? onButtonPressed;
+  final bool showDateTime;
+  final double? titleSize;
+  final double? bodySize;
 
-  // Optional extra details for navigation
-  final String? genre;
-  final String? dateTime;
-  final String? about;
-  final List<String>? gallery;
+
 
   const EventCard({
     super.key,
-    required this.title,
-    required this.location,
-    required this.imageUrl,
+    required this.event,
     required this.buttonLabel,
     this.onButtonPressed,
-    this.genre,
-    this.dateTime,
-    this.about,
-    this.gallery,
+    this.showDateTime = false,
+    this.titleSize,
+    this.bodySize,
   });
-
-  void _navigateToDetails(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => EventDetail(
-          eventTitle: title, // Only this parameter is required
-        ),
-      ),
-    );
-
-  }
-
+  
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
@@ -54,67 +37,101 @@ class EventCard extends StatelessWidget {
         side: BorderSide(color: isDark ? kGrayColor : kLightColor, width: 1),
       ),
       color: isDark ? kDarkColor : kWhiteColor,
-      clipBehavior: Clip.antiAlias,
+      // clipBehavior: Clip.antiAlias,
       child: InkWell(
-        onTap: () => _navigateToDetails(context),
+        onTap: () {
+          Navigator.pushNamed(
+            context,
+            Routes.eventDetail,
+            arguments: {
+              'event': event,
+            },
+          );
+        },
         borderRadius: BorderRadius.circular(12),
         child: Padding(
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.symmetric(horizontal: 12,vertical: 12),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // Event Image
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-                child: Container(
-                  padding: const EdgeInsets.all(4),
-                  color: isDark ? kDarkBackgroundColor : kLightBackgroundColor,
                   child: Image.network(
-                    imageUrl,
+                    event.poster,
                     width: 80,
                     height: 80,
                     fit: BoxFit.cover,
                   ),
                 ),
-              ),
               hSpace(12),
 
               // Details + Button
-              Expanded(
+              Flexible(
+                fit: FlexFit.loose,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      title,
+                      event.title,
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
-                        fontSize: 14,
+                        fontSize: titleSize ??  16,
                         color: isDark ? kWhiteColor : kDarkColor,
                       ),
                     ),
-                    vSpace(2),
-                    Row(
+                    vSpace(4),
+                    Column(
                       children: [
-                        Icon(
-                          Icons.location_on_outlined,
-                          size: 16,
-                          color: colorScheme.onSurface.withValues(alpha: 0.7),
-                        ),
-                        hSpace(4),
-                        Expanded(
-                          child: Text(
-                            location,
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              color: colorScheme.onSurface.withValues(alpha: 0.7),
+                        Row(
+                          children:[
+                            Icon(
+                            Icons.location_on_outlined,
+                            size: 16,
+                            color: colorScheme.onSurface.withValues(alpha: 0.7),
                             ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
+                            hSpace(4),
+                            Expanded(
+                              child: Text(
+                                event.location,
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  color: colorScheme.onSurface.withValues(alpha: 0.7),
+                                  fontSize: bodySize ?? 14,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ]
+                        ),
+                        if (showDateTime)
+                        Row(
+                            children:[
+                              Icon(
+                                Icons.date_range_outlined,
+                                size: 16,
+                                color: colorScheme.onSurface.withValues(alpha: 0.7),
+                              ),
+                              hSpace(4),
+                              Expanded(
+                                child: Text(
+                                  event.dateTime,
+                                  style: theme.textTheme.bodyMedium?.copyWith(
+                                    color: colorScheme.onSurface.withValues(alpha: 0.7),
+                                    fontSize: bodySize ?? 14,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ]
                         ),
                       ],
                     ),
                     vSpace(6),
 
+                    if (buttonLabel.isNotEmpty && onButtonPressed != null)
                     Align(
                       alignment: Alignment.bottomRight,
                       child: SizedBox(
@@ -127,8 +144,14 @@ class EventCard extends StatelessWidget {
                             ),
                             padding: EdgeInsets.zero,
                           ),
-                          onPressed: () => _navigateToDetails(context),
-                          child: Text(buttonLabel,style: TextStyle(color: kWhiteColor),),
+                          onPressed: () {
+                              Navigator.pushNamed(
+                                context,
+                                Routes.booking,
+                                arguments: event, // EventModel instance
+                              );
+                          },
+                          child: Text(buttonLabel, style: const TextStyle(color: kWhiteColor)),
                         ),
                       ),
                     ),

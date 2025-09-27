@@ -1,11 +1,12 @@
 import 'package:event_tracker/screens/auth/controller.dart';
-import 'package:event_tracker/screens/booking/backup_controller.dart';
+import 'package:event_tracker/screens/booking/controller.dart';
 import 'package:event_tracker/screens/events/controller.dart';
 import 'package:event_tracker/screens/home/controller.dart';
 import 'package:event_tracker/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'screens/auth/login.dart';
+import 'navigation/app_routes.dart';
+
 
 void main() {
   runApp(
@@ -14,7 +15,7 @@ void main() {
             ChangeNotifierProvider(create: (context) => AuthController()),
             ChangeNotifierProvider(create: (context) => HomeController()),
             ChangeNotifierProvider(create: (context) => EventController()),
-            ChangeNotifierProvider(create: (context) => BookingController(ticketTypes: [])),
+            ChangeNotifierProvider(create: (context) => BookingController()),
           ],
           child: const MyApp())
   );
@@ -31,7 +32,8 @@ class MyApp extends StatelessWidget {
       themeMode: ThemeMode.system,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
-      home: const Login(),
+      initialRoute: Routes.login, // Login becomes first screen
+      onGenerateRoute: Routes.generateRoute,
     );
   }
 }
