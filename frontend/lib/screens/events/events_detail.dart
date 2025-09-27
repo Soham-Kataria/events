@@ -1,14 +1,16 @@
 import 'package:event_tracker/components/ui_utils.dart';
+import 'package:event_tracker/models/event_model.dart';
 import 'package:event_tracker/theme/colors.dart';
 import 'package:event_tracker/widgets/button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../navigation/app_routes.dart';
 import 'controller.dart';
 
 class EventDetail extends StatelessWidget {
-  final String eventTitle;
+  final EventModel event;
 
-  const EventDetail({super.key, required this.eventTitle});
+  const EventDetail({super.key, required this.event});
 
   void _showAddressBottomSheet(BuildContext context, String location) {
     var theme = Theme.of(context);
@@ -49,31 +51,21 @@ class EventDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var event = Provider.of<EventController>(context);
     var theme = Theme.of(context);
     var isDark = theme.brightness == Brightness.dark;
 
-    var fetchEvent = event.events.firstWhere(
-          (e) => e["title"] == eventTitle,
-      orElse: () => {},
-    );
 
-    if (fetchEvent.isEmpty) {
-      return Scaffold(
-        appBar: AppBar(title: const Text("Event Not Found")),
-        body: const Center(child: Text("Event data not available.")),
-      );
-    }
 
 // Safe access with defaults
-    var title = fetchEvent["title"] ?? "No Title";
-    var genre = fetchEvent["genre"] ?? "Unknown Genre";
-    var dateTime = fetchEvent["dateTime"] ?? "Unknown Date";
-    var location = fetchEvent["location"] ?? "Unknown Location";
-    var posterUrl = fetchEvent["detailPoster"] ?? fetchEvent["poster"]!;
-    var about = fetchEvent["about"] ?? "No description available.";
-    var galleryImages = List<String>.from(fetchEvent["gallery"] ?? []);
-    var price = fetchEvent["price"]?.toString() ?? "TBA";
+    var title = event.title;
+    var genre = event.genre;
+    var dateTime = event.dateTime;
+    var location = event.location;
+    var posterUrl = event.detailPoster;
+    var about = event.about;
+    var galleryImages = event.gallery;
+    var price = event.price.toString();
+
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -314,7 +306,11 @@ class EventDetail extends StatelessWidget {
                     minimumSize: const Size(120, 40),
                     onPressed: () {
                       //  Navigate to booking page
-                      event.navigateToBookingPage(context, fetchEvent);
+                      Navigator.pushNamed(
+                        context,
+                        Routes.booking,
+                        arguments: event, // EventModel instance
+                      );
                     },
                     label: "Book Now",
                   ),

@@ -1,21 +1,16 @@
-import 'package:event_tracker/dummy/dummy_data.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import '../../dummy/dummy_data.dart';
+import '../../models/event_model.dart';
 
-import '../booking/booking.dart';
 
 class EventController with ChangeNotifier {
-
-  //All events
-  List<Map<String, dynamic>> events = allEvents;
-
-  // Favourite toggles
+  List<EventModel> events = allEvents.map((e) => EventModel.fromJson(e)).toList();
   Map<String, bool> favourites = {};
 
   EventController() {
-    // Initialize favourites map with all events as false
-    for (var event in allEvents) {
-      favourites[event["title"]!] = false;
+    for (var e in events) {
+      favourites[e.title] = false;
     }
   }
 
@@ -25,19 +20,16 @@ class EventController with ChangeNotifier {
     notifyListeners();
   }
 
-  // Get only favourited events
-  List<Map<String, dynamic>> getFavouriteEvents() {
-    return allEvents
-        .where((event) => favourites[event["title"]!] == true)
-        .toList();
+  List<EventModel> getFavouriteEvents() {
+    return events.where((e) => favourites[e.title] == true).toList();
   }
 
-  void navigateToBookingPage(BuildContext context, Map<String, dynamic> event) {
+  void navigateToBookingPage(BuildContext context, EventModel event) {
     // Navigator.push(
-    //     context,
-    //     MaterialPageRoute(
-    //       builder: (_) => BookingScreen(eventTitle: event["title"] ?? "Event"),
-    //     )
+    //   context,
+    //   MaterialPageRoute(
+    //     builder: (_) => BookingScreen(event: event),
+    //   ),
     // );
   }
 }

@@ -20,15 +20,8 @@ class FavouriteScreen extends StatelessWidget {
       ),
       body: Consumer<EventController>(
         builder: (context, eventController, _) {
-          // Get all events that are favourited
-          var favouriteEvents = eventController.getFavouriteEvents()
-              .fold<Map<String, Map<String, dynamic>>>({}, (map, event) {
-            map[event["title"]] = event; // overwrite duplicates
-            return map;
-          })
-              .values
-              .toList();
-
+          // Get all favourited events
+          var favouriteEvents = eventController.getFavouriteEvents();
 
           if (favouriteEvents.isEmpty) {
             return const Center(
@@ -42,15 +35,11 @@ class FavouriteScreen extends StatelessWidget {
             separatorBuilder: (_, __) => const SizedBox(height: 12),
             itemBuilder: (context, index) {
               var event = favouriteEvents[index];
-               // bool isFavourite = eventController.favourites[event["title"]!] ?? false;
+             // bool isFavourite = eventController.favourites[event.title] ?? false;
+
               return BigEventCard(
-                title: event["title"]!,
-                genre: event["genre"]!,
-                imageUrl: event["poster"]!,
-                dateTime: event["dateTime"]!,
-                price: event["price"]?.toString() ?? "0",
-                // This toggle automatically updates the list
-                //  onFavouriteToggle: () => eventController.toggleFavourite(event["title"]!),
+                event: event, // Pass the EventModel object directly
+                // Optionally, you can add favourite toggle logic inside BigEventCard
               );
             },
           );

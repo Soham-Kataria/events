@@ -1,46 +1,22 @@
 import 'package:event_tracker/theme/colors.dart';
 import 'package:flutter/material.dart';
 import '../components/ui_utils.dart';
+import '../navigation/app_routes.dart';
 import '../screens/events/events_detail.dart';
+import '../models/event_model.dart';
 
 class EventCard extends StatelessWidget {
-  final String title;
-  final String location;
-  final String imageUrl;
+  final EventModel event;
   final String buttonLabel;
   final VoidCallback? onButtonPressed;
 
-  // Optional extra details for navigation
-  final String? genre;
-  final String? dateTime;
-  final String? about;
-  final List<String>? gallery;
-
   const EventCard({
     super.key,
-    required this.title,
-    required this.location,
-    required this.imageUrl,
+    required this.event,
     required this.buttonLabel,
     this.onButtonPressed,
-    this.genre,
-    this.dateTime,
-    this.about,
-    this.gallery,
   });
-
-  void _navigateToDetails(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => EventDetail(
-          eventTitle: title, // Only this parameter is required
-        ),
-      ),
-    );
-
-  }
-
+  
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
@@ -56,7 +32,15 @@ class EventCard extends StatelessWidget {
       color: isDark ? kDarkColor : kWhiteColor,
       clipBehavior: Clip.antiAlias,
       child: InkWell(
-        onTap: () => _navigateToDetails(context),
+        onTap: () {
+          Navigator.pushNamed(
+            context,
+            Routes.eventDetail,
+            arguments: {
+              'event': event,
+            },
+          );
+        },
         borderRadius: BorderRadius.circular(12),
         child: Padding(
           padding: const EdgeInsets.all(12),
@@ -70,7 +54,7 @@ class EventCard extends StatelessWidget {
                   padding: const EdgeInsets.all(4),
                   color: isDark ? kDarkBackgroundColor : kLightBackgroundColor,
                   child: Image.network(
-                    imageUrl,
+                    event.poster,
                     width: 80,
                     height: 80,
                     fit: BoxFit.cover,
@@ -86,7 +70,7 @@ class EventCard extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      title,
+                      event.title,
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                         fontSize: 14,
@@ -104,7 +88,7 @@ class EventCard extends StatelessWidget {
                         hSpace(4),
                         Expanded(
                           child: Text(
-                            location,
+                            event.location,
                             style: theme.textTheme.bodyMedium?.copyWith(
                               color: colorScheme.onSurface.withValues(alpha: 0.7),
                             ),
@@ -127,8 +111,14 @@ class EventCard extends StatelessWidget {
                             ),
                             padding: EdgeInsets.zero,
                           ),
-                          onPressed: () => _navigateToDetails(context),
-                          child: Text(buttonLabel,style: TextStyle(color: kWhiteColor),),
+                          onPressed: () {
+                              Navigator.pushNamed(
+                                context,
+                                Routes.booking,
+                                arguments: event, // EventModel instance
+                              );
+                          },
+                          child: Text(buttonLabel, style: const TextStyle(color: kWhiteColor)),
                         ),
                       ),
                     ),

@@ -9,7 +9,7 @@ class AppTheme {
     colorScheme: lightColorScheme,
     scaffoldBackgroundColor: lightColorScheme.surface,
     appBarTheme: AppBarTheme(
-      backgroundColor: lightColorScheme.surface, // ✅ matches page background
+      backgroundColor: lightColorScheme.surface,
       foregroundColor: lightColorScheme.onSurface,
       elevation: 0,
     ),
