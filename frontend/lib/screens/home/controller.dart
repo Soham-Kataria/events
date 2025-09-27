@@ -1,57 +1,32 @@
-import 'package:flutter/foundation.dart';
+// screens/home/controller.dart
 import 'package:flutter/material.dart';
-
 import '../../dummy/dummy_data.dart';
+import '../../models/event_model.dart';
 
 class HomeController with ChangeNotifier {
-  // Search field controller
   var txtHomeSearch = TextEditingController();
 
-
-  // Quick filters
-  List<String> quickFilters = [
-    "All",
-    "Music",
-    "Art",
-    "Tech",
-    "Food",
-  ];
-
-  // Selected filter index (-1 = none)
+  List<String> quickFilters = ["All", "Music", "Art", "Tech", "Food"];
   int _selectedFilter = -1;
   int get selectedFilter => _selectedFilter;
 
-  // Methods
   void selectFilter(int index) {
-    if (_selectedFilter == index) {
-      _selectedFilter = -1; // unselect if clicked again
-    } else {
-      _selectedFilter = index;
-    }
+    _selectedFilter = _selectedFilter == index ? -1 : index;
     notifyListeners();
   }
 
-  // Filtered lists for UI
-  List<Map<String, dynamic>> get upcomingEvents =>
-      allEvents.where((e) => e["type"] == "upcoming").toList();
+  List<EventModel> get upcomingEvents =>
+      allEvents.map((e) => EventModel.fromJson(e))
+          .where((e) => e.type == "upcoming")
+          .toList();
 
-  List<Map<String, dynamic>> get popularEvents =>
-      allEvents.where((e) => e["type"] == "popular").toList();
+  List<EventModel> get popularEvents =>
+      allEvents.map((e) => EventModel.fromJson(e))
+          .where((e) => e.type == "popular")
+          .toList();
 
-  List<Map<String, dynamic>> get recommendedEvents =>
-      allEvents.where((e) => e["type"] == "recommendation").toList();
-
-
-  // Methods
-  void handleEventButton(String title) {
-    if (kDebugMode) {
-      print("Event action pressed for: $title");
-    }
-  }
-
-  void handleFavouriteToggle(String title) {
-    if (kDebugMode) {
-      print("Favourite toggled for: $title");
-    }
-  }
+  List<EventModel> get recommendedEvents =>
+      allEvents.map((e) => EventModel.fromJson(e))
+          .where((e) => e.type == "recommendation")
+          .toList();
 }

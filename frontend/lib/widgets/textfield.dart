@@ -46,7 +46,7 @@ Widget customTextField({
       labelText: label,
       hintText: hintText ?? 'Enter your $label',
       hintStyle: const TextStyle(color: Colors.grey),
-      prefixIcon: icon != null ? Icon(icon) : null,
+      prefixIcon: Icon(icon),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
       ),
