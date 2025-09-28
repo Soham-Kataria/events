@@ -116,19 +116,12 @@ class _LoginState extends State<Login> {
                 height: 50,
                 child: outlinedButton(
                   label: "Continue with Google",
-                  icon: Image.asset(
-                    'assets/images/google.png',
-                    height: 24,
-                    width: 24,
-                  ),
-                  onPressed: () {
-                  //todo: add google login
-                  },
-                ),
+                  icon: Image.asset('assets/images/google.png', height: 24, width: 24),
+                  onPressed: () {},
+                  forceWhite: true,
+                )
               ),
-
               vSpace(20),
-
               // Apple Login Button
               SizedBox(
                 width: double.infinity,
@@ -142,7 +135,8 @@ class _LoginState extends State<Login> {
                   ),
                   onPressed: () {
                     // todo: add apple login
-                  }
+                  },
+                  forceWhite: true,
                 ),
               ),
 

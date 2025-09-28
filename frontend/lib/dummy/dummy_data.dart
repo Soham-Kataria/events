@@ -1,5 +1,8 @@
+import '../models/ticket_model.dart';
+
 final List<Map<String, dynamic>> allEvents = [
   {
+    "id": "event1",
     "title": "Music Concert",
     "genre": "Music",
     "location": "Surat",
@@ -16,6 +19,7 @@ final List<Map<String, dynamic>> allEvents = [
     "type": "upcoming",
   },
   {
+    "id": "event2",
     "title": "Comedy Night",
     "genre": "Comedy",
     "location": "City Hall",
@@ -32,6 +36,7 @@ final List<Map<String, dynamic>> allEvents = [
     "type": "popular",
   },
   {
+    "id": "event3",
     "title": "Art Exhibition",
     "genre": "Art",
     "location": "City Center",
@@ -48,6 +53,7 @@ final List<Map<String, dynamic>> allEvents = [
     "type": "recommendation",
   },
   {
+    "id": "event4",
     "title": "Music Concert",
     "genre": "Music",
     "location": "Surat",
@@ -63,6 +69,7 @@ final List<Map<String, dynamic>> allEvents = [
     "type": "upcoming",
   },
   {
+    "id": "event5",
     "title": "Comedy Night",
     "genre": "Comedy",
     "location": "City Hall",
@@ -78,6 +85,7 @@ final List<Map<String, dynamic>> allEvents = [
     "type": "popular",
   },
   {
+    "id": "event6",
     "title": "Art Exhibition",
     "genre": "Art",
     "location": "City Center",
@@ -93,6 +101,7 @@ final List<Map<String, dynamic>> allEvents = [
     "type": "recommendation",
   },
   {
+    "id": "event7",
     "title": "Food Festival",
     "genre": "Food",
     "location": "Town Square",
@@ -108,6 +117,7 @@ final List<Map<String, dynamic>> allEvents = [
     "type": "upcoming",
   },
   {
+    "id": "event8",
     "title": "Tech Conference",
     "genre": "Tech",
     "location": "Innovation Park",
@@ -123,6 +133,7 @@ final List<Map<String, dynamic>> allEvents = [
     "type": "popular",
   },
   {
+    "id": "event9",
     "title": "Dance Show",
     "genre": "Dance",
     "location": "Apple Hub",
@@ -138,6 +149,7 @@ final List<Map<String, dynamic>> allEvents = [
     "type": "recommendation",
   },
   {
+    "id": "event10",
     "title": "Movie Premiere",
     "genre": "Entertainment",
     "location": "Grand Cinema",
@@ -227,9 +239,57 @@ final List<Map<String, dynamic>> allEvents = [
     "price": 500,
     "type": "recommendation",
   },
-
   // You can continue adding until you reach 20+ total events
 ];
+
+final List<TicketModel> allTickets = [
+  TicketModel(
+    id: "1",
+    userId: null, // Not booked yet
+    eventId: "event1",
+    ticketPrice: 500,
+    totalTickets: 100,
+    ticketsAvail: 80,
+    ticketsSold: 20,
+    ticketType: "VIP",
+    isFree: false,
+    bookingStartLine: DateTime.now().subtract(const Duration(days: 2)),
+    bookingDeadLine: DateTime.now().add(const Duration(days: 5)),
+    status: "active",
+    isUsed: false,
+  ),
+  TicketModel(
+    id: "2",
+    userId: null,
+    eventId: "event1",
+    ticketPrice: 200,
+    totalTickets: 200,
+    ticketsAvail: 150,
+    ticketsSold: 50,
+    ticketType: "General",
+    isFree: false,
+    bookingStartLine: DateTime.now().subtract(const Duration(days: 1)),
+    bookingDeadLine: DateTime.now().add(const Duration(days: 7)),
+    status: "active",
+    isUsed: false,
+  ),
+  TicketModel(
+    id: "3",
+    userId: null,
+    eventId: "event2",
+    ticketPrice: 0,
+    totalTickets: 50,
+    ticketsAvail: 50,
+    ticketsSold: 0,
+    ticketType: "General",
+    isFree: true,
+    bookingStartLine: DateTime.now(),
+    bookingDeadLine: DateTime.now().add(const Duration(days: 3)),
+    status: "active",
+    isUsed: false,
+  ),
+];
+
 
 /// Filters for different lists
 final List<Map<String, dynamic>> upcomingEvents = allEvents.where((e) => e["type"] == "upcoming").toList();
