@@ -183,6 +183,7 @@ class _OrderPageState extends State<OrderPage> {
             vSpace(16),
 
             // 🔹 Payment Options Section
+            // 🔹 Payment Options Section (Compatible & Clean)
             Material(
               elevation: 2,
               borderRadius: BorderRadius.circular(12),
@@ -209,37 +210,49 @@ class _OrderPageState extends State<OrderPage> {
                     ),
                     const SizedBox(height: 8),
 
-                    RadioListTile<String>(
+                    // UPI option
+                    ListTile(
+                      leading: Radio<String>(
+                        value: 'upi',
+                        groupValue: selectedPayment,
+                        onChanged: (value) {
+                          setState(() => selectedPayment = value!);
+                        },
+                      ),
                       title: const Text("UPI"),
                       subtitle: const Text("Pay using Google Pay, PhonePe, etc."),
-                      value: 'upi',
-                      groupValue: selectedPayment,
-                      onChanged: (value) =>
-                          setState(() => selectedPayment = value),
-                      activeColor: kPrimaryColor,
                     ),
-                    RadioListTile<String>(
+
+                    // Card option
+                    ListTile(
+                      leading: Radio<String>(
+                        value: 'card',
+                        groupValue: selectedPayment,
+                        onChanged: (value) {
+                          setState(() => selectedPayment = value!);
+                        },
+                      ),
                       title: const Text("Credit / Debit Card"),
                       subtitle: const Text("Visa, MasterCard, Rupay"),
-                      value: 'card',
-                      groupValue: selectedPayment,
-                      onChanged: (value) =>
-                          setState(() => selectedPayment = value),
-                      activeColor: kPrimaryColor,
                     ),
-                    RadioListTile<String>(
+
+                    // Cash option
+                    ListTile(
+                      leading: Radio<String>(
+                        value: 'cash',
+                        groupValue: selectedPayment,
+                        onChanged: (value) {
+                          setState(() => selectedPayment = value!);
+                        },
+                      ),
                       title: const Text("Cash On Event"),
                       subtitle: const Text("Pay at the venue"),
-                      value: 'cash',
-                      groupValue: selectedPayment,
-                      onChanged: (value) =>
-                          setState(() => selectedPayment = value),
-                      activeColor: kPrimaryColor,
                     ),
                   ],
                 ),
               ),
             ),
+
           ],
         ),
       ),
