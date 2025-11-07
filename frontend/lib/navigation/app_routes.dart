@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import '../dummy/dummy_data.dart';
 import '../screens/booking/booking.dart';
+import '../screens/booking/order.dart';
 import '../screens/home/home.dart';
 import '../screens/events/event_list.dart';
 import '../screens/events/events_detail.dart';
@@ -24,6 +25,7 @@ class Routes {
   static const login = '/login';
   static const register = '/register';
   static const booking = '/booking';
+  static const order = '/order';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -62,6 +64,11 @@ class Routes {
             event: event,
             tickets: eventTickets,
           ),
+        );
+
+      case order:
+        return MaterialPageRoute(
+          builder: (_) => OrderPage(),
         );
 
       default:

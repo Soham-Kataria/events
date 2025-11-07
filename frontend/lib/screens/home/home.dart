@@ -80,8 +80,8 @@ class _HomeScreenState extends State<HomeScreen> {
               child: customTextField(
                 controller: home.txtHomeSearch,
                 hintText: 'Search events...',
-                prefixIcon: Icon(Icons.search, color: theme.iconTheme.color),
-                suffixIcon: Icon(Icons.filter_alt_outlined, color: theme.iconTheme.color, size: 24),
+                prefixIcon: Icon(Icons.search, color: kDarkColor),
+                suffixIcon: Icon(Icons.filter_alt_outlined, color: kDarkColor, size: 24),
               ),
             ),
             vSpace(16),
@@ -141,6 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       event: event,
                       buttonLabel: "Notify",
                       onButtonPressed: () {},
+                      showDateTime: false,
                     ),
                   );
                 },

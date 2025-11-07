@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../models/event_model.dart';
 import '../../models/ticket_model.dart';
+import '../../navigation/app_routes.dart';
 import '../../widgets/bottom_bar.dart';
 import '../../widgets/tickets_cards.dart';
+import 'controller.dart';
 
 
 class BookingScreen extends StatefulWidget {
@@ -49,6 +52,8 @@ class _BookingScreenState extends State<BookingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final booking = Provider.of<BookingController>(context, listen: false);
+
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
@@ -82,6 +87,14 @@ class _BookingScreenState extends State<BookingScreen> {
           ? CheckoutBottomBar(
         totalTickets: _totalTickets,
         totalPrice: _totalPrice,
+        onCheckout: () {
+          Navigator.pushNamed(
+            context,
+            Routes.order,
+            arguments: {'event': booking.selectedEvent},
+          );
+
+        },
       )
           : null,
     );

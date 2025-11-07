@@ -2,19 +2,26 @@ import 'package:event_tracker/theme/colors.dart';
 import 'package:flutter/material.dart';
 import '../components/ui_utils.dart';
 import '../navigation/app_routes.dart';
-import '../screens/events/events_detail.dart';
 import '../models/event_model.dart';
 
 class EventCard extends StatelessWidget {
   final EventModel event;
   final String buttonLabel;
   final VoidCallback? onButtonPressed;
+  final bool showDateTime;
+  final double? titleSize;
+  final double? bodySize;
+
+
 
   const EventCard({
     super.key,
     required this.event,
     required this.buttonLabel,
     this.onButtonPressed,
+    this.showDateTime = false,
+    this.titleSize,
+    this.bodySize,
   });
   
   @override
@@ -30,7 +37,7 @@ class EventCard extends StatelessWidget {
         side: BorderSide(color: isDark ? kGrayColor : kLightColor, width: 1),
       ),
       color: isDark ? kDarkColor : kWhiteColor,
-      clipBehavior: Clip.antiAlias,
+      // clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: () {
           Navigator.pushNamed(
@@ -43,16 +50,13 @@ class EventCard extends StatelessWidget {
         },
         borderRadius: BorderRadius.circular(12),
         child: Padding(
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.symmetric(horizontal: 12,vertical: 12),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // Event Image
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-                child: Container(
-                  padding: const EdgeInsets.all(4),
-                  color: isDark ? kDarkBackgroundColor : kLightBackgroundColor,
                   child: Image.network(
                     event.poster,
                     width: 80,
@@ -60,11 +64,11 @@ class EventCard extends StatelessWidget {
                     fit: BoxFit.cover,
                   ),
                 ),
-              ),
               hSpace(12),
 
               // Details + Button
-              Expanded(
+              Flexible(
+                fit: FlexFit.loose,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
@@ -73,32 +77,61 @@ class EventCard extends StatelessWidget {
                       event.title,
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
-                        fontSize: 14,
+                        fontSize: titleSize ??  16,
                         color: isDark ? kWhiteColor : kDarkColor,
                       ),
                     ),
-                    vSpace(2),
-                    Row(
+                    vSpace(4),
+                    Column(
                       children: [
-                        Icon(
-                          Icons.location_on_outlined,
-                          size: 16,
-                          color: colorScheme.onSurface.withValues(alpha: 0.7),
-                        ),
-                        hSpace(4),
-                        Expanded(
-                          child: Text(
-                            event.location,
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              color: colorScheme.onSurface.withValues(alpha: 0.7),
+                        Row(
+                          children:[
+                            Icon(
+                            Icons.location_on_outlined,
+                            size: 16,
+                            color: colorScheme.onSurface.withValues(alpha: 0.7),
                             ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
+                            hSpace(4),
+                            Expanded(
+                              child: Text(
+                                event.location,
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  color: colorScheme.onSurface.withValues(alpha: 0.7),
+                                  fontSize: bodySize ?? 14,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ]
+                        ),
+                        if (showDateTime)
+                        Row(
+                            children:[
+                              Icon(
+                                Icons.date_range_outlined,
+                                size: 16,
+                                color: colorScheme.onSurface.withValues(alpha: 0.7),
+                              ),
+                              hSpace(4),
+                              Expanded(
+                                child: Text(
+                                  event.dateTime,
+                                  style: theme.textTheme.bodyMedium?.copyWith(
+                                    color: colorScheme.onSurface.withValues(alpha: 0.7),
+                                    fontSize: bodySize ?? 14,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ]
                         ),
                       ],
                     ),
                     vSpace(6),
 
+                    if (buttonLabel.isNotEmpty && onButtonPressed != null)
                     Align(
                       alignment: Alignment.bottomRight,
                       child: SizedBox(

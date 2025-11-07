@@ -289,6 +289,14 @@ final List<TicketModel> allTickets = [
     isUsed: false,
   ),
 ];
+/// 🧍 Dummy user profile data
+const Map<String, String> dummyUser = {
+  "name": "Jigar Patel",
+  "email": "pateljigare2505@gmail.com",
+  "phone": "+91 9574692421",
+  "location": "Mumbai, India",
+};
+
 
 
 /// Filters for different lists

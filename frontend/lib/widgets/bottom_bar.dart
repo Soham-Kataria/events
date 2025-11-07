@@ -1,14 +1,17 @@
+// lib/widgets/bottom_bar.dart
 import 'package:flutter/material.dart';
 import 'button.dart';
 
 class CheckoutBottomBar extends StatelessWidget {
   final int totalTickets;
   final double totalPrice;
+  final VoidCallback onCheckout; //  Add callback
 
   const CheckoutBottomBar({
     super.key,
     required this.totalTickets,
     required this.totalPrice,
+    required this.onCheckout, //  Required now
   });
 
   @override
@@ -24,7 +27,7 @@ class CheckoutBottomBar extends StatelessWidget {
         decoration: BoxDecoration(
           color: colorScheme.surface,
           border: Border(
-            top: BorderSide(color: colorScheme.outline.withValues(alpha:0.2)),
+            top: BorderSide(color: colorScheme.outline.withValues(alpha: 0.2)),
           ),
           borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
         ),
@@ -38,7 +41,7 @@ class CheckoutBottomBar extends StatelessWidget {
                 Text(
                   '$totalTickets Ticket${totalTickets > 1 ? 's' : ''}',
                   style: theme.textTheme.bodyMedium?.copyWith(
-                    color: colorScheme.onSurface.withValues(alpha:0.7),
+                    color: colorScheme.onSurface.withValues(alpha: 0.7),
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -53,9 +56,7 @@ class CheckoutBottomBar extends StatelessWidget {
             ),
             elevatedButton(
               minimumSize: const Size(120, 40),
-              onPressed: () {
-                debugPrint('Proceed to checkout with $totalTickets tickets');
-              },
+              onPressed: onCheckout, // ✅ Use passed callback
               label: "Checkout",
               backgroundColor: colorScheme.primary,
               textColor: colorScheme.onPrimary,
