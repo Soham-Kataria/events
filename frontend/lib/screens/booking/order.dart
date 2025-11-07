@@ -5,8 +5,15 @@ import '../../widgets/bottom_bar.dart';
 import '../../models/event_model.dart';
 import '../../widgets/event_card.dart';
 
-class OrderPage extends StatelessWidget {
+class OrderPage extends StatefulWidget {
   const OrderPage({super.key});
+
+  @override
+  State<OrderPage> createState() => _OrderPageState();
+}
+
+class _OrderPageState extends State<OrderPage> {
+  String? selectedPayment = 'upi'; // Default selected option
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +23,13 @@ class OrderPage extends StatelessWidget {
       title: 'Music Concert',
       location: 'City Arena',
       dateTime: '2025-10-05 7:00 PM',
-      poster: 'https://picsum.photos/400/200?11', genre: '', detailPoster: '', gallery: [], about: '', price: 500, type: '',
+      poster: 'https://picsum.photos/400/200?11',
+      genre: '',
+      detailPoster: '',
+      gallery: [],
+      about: '',
+      price: 500,
+      type: '',
     );
 
     final selectedTickets = {'VIP': 2, 'General': 3};
@@ -27,8 +40,8 @@ class OrderPage extends StatelessWidget {
     selectedTickets.forEach((type, qty) {
       subtotal += (ticketPrices[type] ?? 0) * qty;
     });
-    final tax = 50.0;
-    final platformFee = 30.0;
+    const tax = 50.0;
+    const platformFee = 30.0;
     final total = subtotal + tax + platformFee;
     final totalTickets = selectedTickets.values.fold(0, (a, b) => a + b);
 
@@ -48,7 +61,7 @@ class OrderPage extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            // Event Card
+            // 🔹 Event Card
             EventCard(
               event: event,
               buttonLabel: '',
@@ -58,14 +71,14 @@ class OrderPage extends StatelessWidget {
             ),
             vSpace(10),
 
-            // Order Summary Container
+            // 🔹 Order Summary Container
             Material(
               elevation: 2,
               borderRadius: BorderRadius.circular(12),
-              child:Container(
+              child: Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: isDark ? kDarkColor: kWhiteColor,
+                  color: isDark ? kDarkColor : kWhiteColor,
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
                       color: isDark ? kGrayColor : kLightColor, width: 1),
@@ -73,16 +86,18 @@ class OrderPage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Order Summary",
+                    Text(
+                      "Order Summary",
                       style: TextStyle(
-                        fontSize: 24,
+                        fontSize: 22,
                         fontWeight: FontWeight.bold,
                         color: isDark ? kWhiteColor : kDarkColor,
                       ),
                     ),
                     vSpace(10),
-                  Divider(),
-                  // Tickets list
+                    const Divider(),
+
+                    // 🔸 Ticket Details
                     ...selectedTickets.entries.map((entry) {
                       final type = entry.key;
                       final qty = entry.value;
@@ -92,12 +107,19 @@ class OrderPage extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text("$type ×$qty",
-                                style: TextStyle(
-                                    color: isDark ? Colors.white : Colors.black87)),
-                            Text("₹${price.toStringAsFixed(0)}",
-                                style: TextStyle(
-                                  color: isDark ? Colors.white : Colors.black87)
+                            Text(
+                              "$type ×$qty",
+                              style: TextStyle(
+                                color:
+                                isDark ? Colors.white : Colors.black87,
+                              ),
+                            ),
+                            Text(
+                              "₹${price.toStringAsFixed(0)}",
+                              style: TextStyle(
+                                color:
+                                isDark ? Colors.white : Colors.black87,
+                              ),
                             ),
                           ],
                         ),
@@ -109,10 +131,14 @@ class OrderPage extends StatelessWidget {
                       children: [
                         Text("Tax",
                             style: TextStyle(
-                                color: isDark ? Colors.white : Colors.black87)),
+                                color: isDark
+                                    ? Colors.white
+                                    : Colors.black87)),
                         Text("₹${tax.toStringAsFixed(0)}",
                             style: TextStyle(
-                                color: isDark ? Colors.white : Colors.black87)),
+                                color: isDark
+                                    ? Colors.white
+                                    : Colors.black87)),
                       ],
                     ),
                     Row(
@@ -120,40 +146,114 @@ class OrderPage extends StatelessWidget {
                       children: [
                         Text("Platform Fee",
                             style: TextStyle(
-                                color: isDark ? Colors.white : Colors.black87)),
+                                color: isDark
+                                    ? Colors.white
+                                    : Colors.black87)),
                         Text("₹${platformFee.toStringAsFixed(0)}",
                             style: TextStyle(
-                                color: isDark ? Colors.white : Colors.black87)),
+                                color: isDark
+                                    ? Colors.white
+                                    : Colors.black87)),
                       ],
                     ),
                     const Divider(),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text("Total",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: isDark ? Colors.white : Colors.black87)),
-                        Text("₹${total.toStringAsFixed(0)}",
-                            style: const TextStyle(fontWeight: FontWeight.bold)),
+                        Text(
+                          "Total",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color:
+                            isDark ? Colors.white : Colors.black87,
+                          ),
+                        ),
+                        Text(
+                          "₹${total.toStringAsFixed(0)}",
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold),
+                        ),
                       ],
                     ),
                   ],
                 ),
               ),
             ),
-            vSpace(10),
 
+            vSpace(16),
+
+            // 🔹 Payment Options Section
+            Material(
+              elevation: 2,
+              borderRadius: BorderRadius.circular(12),
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: isDark ? kDarkColor : kWhiteColor,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: isDark ? kGrayColor : kLightColor,
+                    width: 1,
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Select Payment Method",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: isDark ? kWhiteColor : kDarkColor,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+
+                    RadioListTile<String>(
+                      title: const Text("UPI"),
+                      subtitle: const Text("Pay using Google Pay, PhonePe, etc."),
+                      value: 'upi',
+                      groupValue: selectedPayment,
+                      onChanged: (value) =>
+                          setState(() => selectedPayment = value),
+                      activeColor: kPrimaryColor,
+                    ),
+                    RadioListTile<String>(
+                      title: const Text("Credit / Debit Card"),
+                      subtitle: const Text("Visa, MasterCard, Rupay"),
+                      value: 'card',
+                      groupValue: selectedPayment,
+                      onChanged: (value) =>
+                          setState(() => selectedPayment = value),
+                      activeColor: kPrimaryColor,
+                    ),
+                    RadioListTile<String>(
+                      title: const Text("Cash On Event"),
+                      subtitle: const Text("Pay at the venue"),
+                      value: 'cash',
+                      groupValue: selectedPayment,
+                      onChanged: (value) =>
+                          setState(() => selectedPayment = value),
+                      activeColor: kPrimaryColor,
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),
 
+      // 🔹 Bottom Bar
       bottomNavigationBar: CheckoutBottomBar(
         totalTickets: totalTickets,
         totalPrice: total,
         onCheckout: () {
           ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text("Checkout tapped")));
+            SnackBar(
+              content: Text('Payment Method: $selectedPayment'),
+            ),
+          );
         },
       ),
     );
