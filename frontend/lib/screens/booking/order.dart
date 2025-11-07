@@ -142,7 +142,8 @@ class OrderPage extends StatelessWidget {
                 ),
               ),
             ),
-            vSpace( 120), // Space for bottom bar
+            vSpace(10),
+
           ],
         ),
       ),
